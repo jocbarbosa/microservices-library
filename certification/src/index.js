@@ -1,14 +1,14 @@
 const kafka = require('kafkajs');
 
-const kafka = new kafka.Kafka({
+const kafkaClient = new kafka.Kafka({
     brokers: ['localhost:9092'],
     clientId: 'certificate',
 })
 
 const topic = 'issue-certificate'
-const consumer = kafka.consumer({ groupId: 'certificate-group' })
+const consumer = kafkaClient.consumer({ groupId: 'certificate-group' })
 
-const producer = kafka.producer();
+const producer = kafkaClient.producer();
 
 async function run() {
     await consumer.connect()
