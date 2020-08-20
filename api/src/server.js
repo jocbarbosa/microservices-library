@@ -1,15 +1,30 @@
-import express from 'express';
-import { Kafka } from 'kafkajs';
+const express = require('express');
+const kafka = require('kafkajs');
 
+const routes = require('./routes/routes');
 const app = express();
 
-const kafka = new kafka({
+const kafkaClient = new kafka.Kafka({
     clientId: 'producer-api',
-    brokers: ['kafka:9092', 'kafka2:9092']
+    brokers: ['localhost:9092']
 });
 
-app.get('/certifications', (request, response) => {
-    return response.json({ ok: true });
-})
+const producer = kafkaClient.producer();
 
-app.listen(process.env.PORT || 3000);
+app.use((request, response, next) => {
+    request.producer = producer;
+    return next();
+});
+
+// Midlewares
+app.use(routes);
+
+const run = async () => {
+    await producer.connect();
+
+    app.listen(process.env.PORT || 3000);
+}
+
+run().catch(console.error);
+
+
