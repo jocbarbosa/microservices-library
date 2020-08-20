@@ -2,7 +2,7 @@ const express = require('express');
 
 const routes = express.Router();
 
-routes.get('/certifications', async (request, response) => {
+routes.post('/certifications', async (request, response) => {
 
     const msg = {
         user: {
